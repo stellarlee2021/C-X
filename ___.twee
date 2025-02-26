@@ -109,6 +109,39 @@
 ">确定</button>
 
 
+:: AttributePage {"position":"200,175","size":"100,100"}
+<table border="1">
+    <thead>
+        <tr>
+            <th>属性类型</th>
+            <th>属性详情</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>基本属性</td>
+            <td>这里是基本属性的具体内容</td>
+        </tr>
+        <tr>
+            <td>身体属性</td>
+            <td>这里是身体属性的具体内容</td>
+        </tr>
+        <tr>
+            <td>技能属性</td>
+            <td>这里是技能属性的具体内容</td>
+        </tr>
+        <tr>
+            <td>秘密属性</td>
+            <td>这里是秘密属性的具体内容</td>
+        </tr>
+        <tr>
+            <td>职业属性</td>
+            <td>这里是职业属性的具体内容</td>
+        </tr>
+    </tbody>
+</table>
+
+
 :: ShowAttributes {"position":"575,50","size":"100,100"}
 <h1 id="playerGreeting"></h1>
 <p id="playerBirthday"></p>
@@ -195,6 +228,18 @@
     document.getElementById('playerMakeup').textContent = player.skillAttributes.makeup;
     document.getElementById('playerHighHeelProficiency').textContent = player.skillAttributes.highHeelProficiency;
 </script>
+
+
+:: StoryCaption {"position":"75,175","size":"100,100"}
+<<script>>
+$(document).ready(function() {
+    $('#attribute-button').on('click', function() {
+        Engine.play("AttributePage");
+    });
+});
+<</script>>
+
+<button id="attribute-button">属性</button>
 
 
 :: 开始 {"position":"75,50","size":"100,100"}
