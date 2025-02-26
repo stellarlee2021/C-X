@@ -1,0 +1,325 @@
+:: StoryTitle
+潮与汐
+
+
+:: StoryData
+{
+  "ifid": "1ED7848F-BEAB-4A2B-8FF7-E40618AA8097",
+  "format": "SugarCube",
+  "format-version": "2.37.3",
+  "start": "开始",
+  "zoom": 1
+}
+
+
+:: AskBirthDay {"position":"450,50","size":"100,100"}
+<h1 id="selectedMonthText"></h1>
+<div id="dayButtons"></div>
+<script>
+    const month = player.birthday.month;
+    document.getElementById('selectedMonthText').textContent = `你选择了 ${month} 月，请选择生日日期：`;
+
+    let daysInMonth;
+    switch (month) {
+        case 2:
+            daysInMonth = new Date(2003, 2, 0).getDate();
+            break;
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+            daysInMonth = 30;
+            break;
+        default:
+            daysInMonth = 31;
+    }
+
+    const dayButtonsDiv = document.getElementById('dayButtons');
+    for (let i = 1; i <= daysInMonth; i++) {
+        const button = document.createElement('button');
+        button.textContent = `${i} 日`;
+        button.onclick = function () {
+            player.birthday.day = i;
+            setConstellationAndAttributes(month, i);
+            changePassage('ShowAttributes');
+        };
+        dayButtonsDiv.appendChild(button);
+    }
+</script>
+
+
+:: AskBirthMonth {"position":"325,50","size":"100,100"}
+<h1>请选择你的生日月份（年份固定为 2003 年）：</h1>
+<button onclick="
+    player.birthday.month = 1;
+    changePassage('AskBirthDay');
+">1 月</button>
+<button onclick="
+    player.birthday.month = 2;
+    changePassage('AskBirthDay');
+">2 月</button>
+<button onclick="
+    player.birthday.month = 3;
+    changePassage('AskBirthDay');
+">3 月</button>
+<button onclick="
+    player.birthday.month = 4;
+    changePassage('AskBirthDay');
+">4 月</button>
+<button onclick="
+    player.birthday.month = 5;
+    changePassage('AskBirthDay');
+">5 月</button>
+<button onclick="
+    player.birthday.month = 6;
+    changePassage('AskBirthDay');
+">6 月</button>
+<button onclick="
+    player.birthday.month = 7;
+    changePassage('AskBirthDay');
+">7 月</button>
+<button onclick="
+    player.birthday.month = 8;
+    changePassage('AskBirthDay');
+">8 月</button>
+<button onclick="
+    player.birthday.month = 9;
+    changePassage('AskBirthDay');
+">9 月</button>
+<button onclick="
+    player.birthday.month = 10;
+    changePassage('AskBirthDay');
+">10 月</button>
+<button onclick="
+    player.birthday.month = 11;
+    changePassage('AskBirthDay');
+">11 月</button>
+<button onclick="
+    player.birthday.month = 12;
+    changePassage('AskBirthDay');
+">12 月</button>
+
+
+:: AskName {"position":"200,50","size":"100,100"}
+<h1>请输入你的名字：</h1>
+<input type="text" id="playerNameInput">
+<button onclick="
+    player.name = document.getElementById('playerNameInput').value;
+    changePassage('AskBirthMonth');
+">确定</button>
+
+
+:: ShowAttributes {"position":"575,50","size":"100,100"}
+<h1 id="playerGreeting"></h1>
+<p id="playerBirthday"></p>
+<p id="playerConstellation"></p>
+
+<h2>基本属性</h2>
+<p>性别：<span id="playerGender"></span></p>
+<p>年龄：<span id="playerAge"></span></p>
+<p>身高：<span id="playerHeight"></span> cm</p>
+<p>胸围：<span id="playerBust"></span> cm</p>
+<p>腰围：<span id="playerWaist"></span> cm</p>
+<p>臀围：<span id="playerHip"></span> cm</p>
+<p>罩杯：<span id="playerCup"></span></p>
+
+<h2>身体属性</h2>
+<p>文化：<span id="playerCulture"></span></p>
+<p>智慧：<span id="playerWisdom"></span></p>
+<p>灵巧：<span id="playerDexterity"></span></p>
+<p>耐力：<span id="playerEndurance"></span></p>
+<p>力量：<span id="playerStrength"></span></p>
+<p>平衡：<span id="playerBalance"></span></p>
+<p>谈吐：<span id="playerConversation"></span></p>
+<p>仪态：<span id="playerDeportment"></span></p>
+<p>律动：<span id="playerRhythm"></span></p>
+<p>创意：<span id="playerCreativity"></span></p>
+<p>勇气：<span id="playerCourage"></span></p>
+<p>美貌：<span id="playerBeauty"></span></p>
+<p>魅力：<span id="playerCharm"></span></p>
+<p>开放：<span id="playerOpenness"></span></p>
+<p>道德：<span id="playerMorality"></span></p>
+
+<h2>技能属性</h2>
+<p>绘画：<span id="playerPainting"></span></p>
+<p>设计：<span id="playerDesign"></span></p>
+<p>舞蹈：<span id="playerDance"></span></p>
+<p>乐理：<span id="playerMusicTheory"></span></p>
+<p>乐器：<span id="playerInstrument"></span></p>
+<p>演唱：<span id="playerSinging"></span></p>
+<p>主持：<span id="playerHosting"></span></p>
+<p>表演：<span id="playerActing"></span></p>
+<p>化妆：<span id="playerMakeup"></span></p>
+<p>高跟鞋熟练：<span id="playerHighHeelProficiency"></span></p>
+
+<script>
+    document.getElementById('playerGreeting').textContent = `你好，${player.name}！`;
+    document.getElementById('playerBirthday').textContent = `你的生日是 2003 年 ${player.birthday.month} 月 ${player.birthday.day} 日`;
+    document.getElementById('playerConstellation').textContent = `星座是 ${player.constellation}`;
+
+    // 显示基本属性
+    document.getElementById('playerGender').textContent = player.basicAttributes.gender;
+    document.getElementById('playerAge').textContent = player.basicAttributes.age;
+    document.getElementById('playerHeight').textContent = player.basicAttributes.height;
+    document.getElementById('playerBust').textContent = player.basicAttributes.bust;
+    document.getElementById('playerWaist').textContent = player.basicAttributes.waist;
+    document.getElementById('playerHip').textContent = player.basicAttributes.hip;
+    document.getElementById('playerCup').textContent = player.basicAttributes.cup;
+
+    // 显示身体属性
+    document.getElementById('playerCulture').textContent = player.physicalAttributes.culture;
+    document.getElementById('playerWisdom').textContent = player.physicalAttributes.wisdom;
+    document.getElementById('playerDexterity').textContent = player.physicalAttributes.dexterity;
+    document.getElementById('playerEndurance').textContent = player.physicalAttributes.endurance;
+    document.getElementById('playerStrength').textContent = player.physicalAttributes.strength;
+    document.getElementById('playerBalance').textContent = player.physicalAttributes.balance;
+    document.getElementById('playerConversation').textContent = player.physicalAttributes.conversation;
+    document.getElementById('playerDeportment').textContent = player.physicalAttributes.deportment;
+    document.getElementById('playerRhythm').textContent = player.physicalAttributes.rhythm;
+    document.getElementById('playerCreativity').textContent = player.physicalAttributes.creativity;
+    document.getElementById('playerCourage').textContent = player.physicalAttributes.courage;
+    document.getElementById('playerBeauty').textContent = player.physicalAttributes.beauty;
+    document.getElementById('playerCharm').textContent = player.physicalAttributes.charm;
+    document.getElementById('playerOpenness').textContent = player.physicalAttributes.openness;
+    document.getElementById('playerMorality').textContent = player.physicalAttributes.morality;
+
+    // 显示技能属性
+    document.getElementById('playerPainting').textContent = player.skillAttributes.painting;
+    document.getElementById('playerDesign').textContent = player.skillAttributes.design;
+    document.getElementById('playerDance').textContent = player.skillAttributes.dance;
+    document.getElementById('playerMusicTheory').textContent = player.skillAttributes.musicTheory;
+    document.getElementById('playerInstrument').textContent = player.skillAttributes.instrument;
+    document.getElementById('playerSinging').textContent = player.skillAttributes.singing;
+    document.getElementById('playerHosting').textContent = player.skillAttributes.hosting;
+    document.getElementById('playerActing').textContent = player.skillAttributes.acting;
+    document.getElementById('playerMakeup').textContent = player.skillAttributes.makeup;
+    document.getElementById('playerHighHeelProficiency').textContent = player.skillAttributes.highHeelProficiency;
+</script>
+
+
+:: 开始 {"position":"75,50","size":"100,100"}
+<h1>欢迎来到星座属性测试游戏！</h1>
+<button onclick="changePassage('AskName')">开始游戏</button>
+
+
+:: StoryScript [script]
+// 初始化玩家对象
+window.player = {
+    // 基本属性
+    basicAttributes: {
+        gender: '女性',
+        age: 20, 
+        height: 165, 
+        bust: 85, 
+        waist: 60, 
+        hip: 88, 
+        cup: 'B' 
+    },
+    // 身体属性
+    physicalAttributes: {
+        culture: 30,
+        wisdom: 30,
+        dexterity: 30,
+        endurance: 30,
+        strength: 30,
+        balance: 30,
+        conversation: 30,
+        deportment: 30,
+        rhythm: 30,
+        creativity: 30,
+        courage: 30,
+        beauty: 30,
+        charm: 30,
+        openness: 30,
+        morality: 30
+    },
+    // 技能属性
+    skillAttributes: {
+        painting: 10,
+        design: 10,
+        dance: 10,
+        musicTheory: 10,
+        instrument: 10,
+        singing: 10,
+        hosting: 10,
+        acting: 10,
+        makeup: 10,
+        highHeelProficiency: 10
+    },
+    // 秘密属性
+    secretAttributes: {
+        lust: 10,
+        corruption: 0,
+        corruptionLevel: 0,
+        sensitivity: 0,
+        sensitivityLevel: 0,
+        orgasm: 0,
+        peak: 0,
+        squirting: 0,
+        milkSpraying: 0
+    },
+    // 生日属性
+    birthday: {
+        month: 1,
+        day: 1
+    },
+    // 职业属性，初始为空字符串，后续可根据情节赋值
+    occupation: ''
+};
+
+// 定义所有职业的数组，方便后续操作
+const allOccupations = [
+    '画家', '设计师', '编曲家', '作词家', '歌手', '偶像', '舞蹈家', '主持人',
+    '外卖员', '服务员', '脱衣女郎', '妓女', '职员', '洗车工', '收银员', '导购',
+    '销售', '导游', '清洁工', '女仆', '奴隶', '演员', 'AV演员', '主播', '博主',
+    '色情主播', '氛围小姐', '陪酒小姐'
+];
+
+// 定义星座信息数组，包含星座名称、日期范围和对应属性加成
+const constellations = [
+    { name: '摩羯座', start: [12, 22], end: [1, 19], strength: 10, intelligence: 5, agility: 3 },
+    { name: '水瓶座', start: [1, 20], end: [2, 18], strength: 3, intelligence: 10, agility: 7 },
+    { name: '双鱼座', start: [2, 19], end: [3, 20], strength: 5, intelligence: 8, agility: 6 },
+    { name: '白羊座', start: [3, 21], end: [4, 19], strength: 12, intelligence: 4, agility: 8 },
+    { name: '金牛座', start: [4, 20], end: [5, 20], strength: 11, intelligence: 6, agility: 5 },
+    { name: '双子座', start: [5, 21], end: [6, 21], strength: 6, intelligence: 12, agility: 9 },
+    { name: '巨蟹座', start: [6, 22], end: [7, 22], strength: 7, intelligence: 9, agility: 5 },
+    { name: '狮子座', start: [7, 23], end: [8, 22], strength: 13, intelligence: 5, agility: 7 },
+    { name: '处女座', start: [8, 23], end: [9, 22], strength: 8, intelligence: 11, agility: 6 },
+    { name: '天秤座', start: [9, 23], end: [10, 23], strength: 6, intelligence: 10, agility: 8 },
+    { name: '天蝎座', start: [10, 24], end: [11, 21], strength: 9, intelligence: 8, agility: 7 },
+    { name: '射手座', start: [11, 22], end: [12, 21], strength: 10, intelligence: 7, agility: 9 }
+];
+
+// 根据生日月份和日期确定星座并设置玩家属性的函数
+window.setConstellationAndAttributes = function (month, day) {
+    for (const constellation of constellations) {
+        const [startMonth, startDay] = constellation.start;
+        const [endMonth, endDay] = constellation.end;
+        if ((month > startMonth || (month === startMonth && day >= startDay)) &&
+            (month < endMonth || (month === endMonth && day <= endDay))) {
+            player.constellation = constellation.name;
+            player.physicalAttributes.strength += constellation.strength;
+            player.physicalAttributes.intelligence += constellation.intelligence;
+            player.physicalAttributes.agility += constellation.agility;
+            break;
+        }
+    }
+};
+
+// 切换页面的函数
+window.changePassage = function (passageName) {
+    Engine.play(passageName);
+};
+
+// 处理堕落值和敏感值达到上限的函数
+window.updateCorruptionAndSensitivity = function () {
+    if (player.secretAttributes.corruption >= 100) {
+        player.secretAttributes.corruptionLevel = Math.min(player.secretAttributes.corruptionLevel + 1, 5);
+        player.secretAttributes.corruption = 0;
+    }
+    if (player.secretAttributes.sensitivity >= 100) {
+        player.secretAttributes.sensitivityLevel = Math.min(player.secretAttributes.sensitivityLevel + 1, 5);
+        player.secretAttributes.sensitivity = 0;
+    }
+};
