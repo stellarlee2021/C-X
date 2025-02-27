@@ -104,10 +104,12 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<tw-storydata name="潮与汐" startnode="1" creator="Twine" creator-version="2.10.0" format="SugarCube" format-version="2.37.3" ifid="1ED7848F-BEAB-4A2B-8FF7-E40618AA8097" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">// 初始化玩家对象
+	<tw-storydata name="潮与汐" startnode="7" creator="Twine" creator-version="2.10.0" format="SugarCube" format-version="2.37.3" ifid="1ED7848F-BEAB-4A2B-8FF7-E40618AA8097" options="" tags="" zoom="1" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript">
+// 初始化玩家对象
 window.player = {
     // 基本属性
     basicAttributes: {
+        name: '沐雪儿', // 新增姓名属性并设置默认值
         gender: '女性',
         age: 20, 
         height: 165, 
@@ -223,13 +225,40 @@ window.updateCorruptionAndSensitivity = function () {
         player.secretAttributes.sensitivityLevel = Math.min(player.secretAttributes.sensitivityLevel + 1, 5);
         player.secretAttributes.sensitivity = 0;
     }
-};</script><tw-passagedata pid="1" name="开始" tags="" position="75,50" size="100,100">&lt;h1&gt;欢迎来到星座属性测试游戏！&lt;/h1&gt;
-&lt;button onclick=&quot;changePassage(&#39;AskName&#39;)&quot;&gt;开始游戏&lt;/button&gt;</tw-passagedata><tw-passagedata pid="2" name="AskName" tags="" position="200,50" size="100,100">&lt;h1&gt;请输入你的名字：&lt;/h1&gt;
-&lt;input type=&quot;text&quot; id=&quot;playerNameInput&quot;&gt;
-&lt;button onclick=&quot;
-    player.name = document.getElementById(&#39;playerNameInput&#39;).value;
-    changePassage(&#39;AskBirthMonth&#39;);
-&quot;&gt;确定&lt;/button&gt;</tw-passagedata><tw-passagedata pid="3" name="AskBirthMonth" tags="" position="325,50" size="100,100">&lt;h1&gt;请选择你的生日月份（年份固定为 2003 年）：&lt;/h1&gt;
+};</script><tw-passagedata pid="1" name="AskBirthDay" tags="" position="450,50" size="100,100">:: AskBirthDay {&quot;position&quot;:&quot;450,50&quot;,&quot;size&quot;:&quot;100,100&quot;}
+&lt;h1 id=&quot;selectedMonthText&quot;&gt;&lt;/h1&gt;
+&lt;div id=&quot;dayButtons&quot;&gt;&lt;/div&gt;
+&lt;script&gt;
+    const month = player.birthday.month;
+    document.getElementById(&#39;selectedMonthText&#39;).textContent = `你选择了 ${month} 月，请选择生日日期：`;
+
+    let daysInMonth;
+    switch (month) {
+        case 2:
+            daysInMonth = new Date(2003, 2, 0).getDate();
+            break;
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+            daysInMonth = 30;
+            break;
+        default:
+            daysInMonth = 31;
+    }
+
+    const dayButtonsDiv = document.getElementById(&#39;dayButtons&#39;);
+    for (let i = 1; i &lt;= daysInMonth; i++) {
+        const button = document.createElement(&#39;button&#39;);
+        button.textContent = `${i} 日`;
+        button.onclick = function () {
+            player.birthday.day = i;
+            setConstellationAndAttributes(month, i);
+            changePassage(&#39;AskHeight&#39;);
+        };
+        dayButtonsDiv.appendChild(button);
+    }
+&lt;/script&gt;</tw-passagedata><tw-passagedata pid="2" name="AskBirthMonth" tags="" position="325,50" size="100,100">&lt;h1&gt;请选择你的生日月份（年份固定为 2003 年）：&lt;/h1&gt;
 &lt;button onclick=&quot;
     player.birthday.month = 1;
     changePassage(&#39;AskBirthDay&#39;);
@@ -277,11 +306,148 @@ window.updateCorruptionAndSensitivity = function () {
 &lt;button onclick=&quot;
     player.birthday.month = 12;
     changePassage(&#39;AskBirthDay&#39;);
-&quot;&gt;12 月&lt;/button&gt;</tw-passagedata><tw-passagedata pid="4" name="ShowAttributes" tags="" position="575,50" size="100,100">&lt;h1 id=&quot;playerGreeting&quot;&gt;&lt;/h1&gt;
+&quot;&gt;12 月&lt;/button&gt;</tw-passagedata><tw-passagedata pid="3" name="AskName" tags="" position="200,50" size="100,100">&lt;h1&gt;请输入你的名字：&lt;/h1&gt;
+&lt;input type=&quot;text&quot; id=&quot;playerNameInput&quot; value=&quot;沐雪儿&quot;&gt;
+&lt;button onclick=&quot;
+    player.basicAttributes.name = document.getElementById(&#39;playerNameInput&#39;).value;
+    changePassage(&#39;AskBirthMonth&#39;);
+&quot;&gt;确定&lt;/button&gt;</tw-passagedata><tw-passagedata pid="4" name="AttributePage" tags="" position="200,175" size="100,100">&lt;table border=&quot;1&quot;&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th&gt;属性类型&lt;/th&gt;
+            &lt;th&gt;属性详情&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td&gt;基本属性&lt;/td&gt;
+            &lt;td&gt;
+                姓名：&lt;span id=&quot;attr-name&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                性别：&lt;span id=&quot;attr-gender&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                年龄：&lt;span id=&quot;attr-age&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                身高：&lt;span id=&quot;attr-height&quot;&gt;&lt;/span&gt; cm&lt;br&gt;
+                胸围：&lt;span id=&quot;attr-bust&quot;&gt;&lt;/span&gt; cm&lt;br&gt;
+                腰围：&lt;span id=&quot;attr-waist&quot;&gt;&lt;/span&gt; cm&lt;br&gt;
+                臀围：&lt;span id=&quot;attr-hip&quot;&gt;&lt;/span&gt; cm&lt;br&gt;
+                罩杯：&lt;span id=&quot;attr-cup&quot;&gt;&lt;/span&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;身体属性&lt;/td&gt;
+            &lt;td&gt;
+                文化：&lt;span id=&quot;attr-culture&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                智慧：&lt;span id=&quot;attr-wisdom&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                灵巧：&lt;span id=&quot;attr-dexterity&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                耐力：&lt;span id=&quot;attr-endurance&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                力量：&lt;span id=&quot;attr-strength&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                平衡：&lt;span id=&quot;attr-balance&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                谈吐：&lt;span id=&quot;attr-conversation&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                仪态：&lt;span id=&quot;attr-deportment&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                律动：&lt;span id=&quot;attr-rhythm&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                创意：&lt;span id=&quot;attr-creativity&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                勇气：&lt;span id=&quot;attr-courage&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                美貌：&lt;span id=&quot;attr-beauty&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                魅力：&lt;span id=&quot;attr-charm&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                开放：&lt;span id=&quot;attr-openness&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                道德：&lt;span id=&quot;attr-morality&quot;&gt;&lt;/span&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;技能属性&lt;/td&gt;
+            &lt;td&gt;
+                绘画：&lt;span id=&quot;attr-painting&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                设计：&lt;span id=&quot;attr-design&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                舞蹈：&lt;span id=&quot;attr-dance&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                乐理：&lt;span id=&quot;attr-musicTheory&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                乐器：&lt;span id=&quot;attr-instrument&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                演唱：&lt;span id=&quot;attr-singing&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                主持：&lt;span id=&quot;attr-hosting&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                表演：&lt;span id=&quot;attr-acting&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                化妆：&lt;span id=&quot;attr-makeup&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                高跟鞋熟练：&lt;span id=&quot;attr-highHeelProficiency&quot;&gt;&lt;/span&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;秘密属性&lt;/td&gt;
+            &lt;td&gt;
+                欲望：&lt;span id=&quot;attr-lust&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                堕落值：&lt;span id=&quot;attr-corruption&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                堕落等级：&lt;span id=&quot;attr-corruptionLevel&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                敏感值：&lt;span id=&quot;attr-sensitivity&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                敏感等级：&lt;span id=&quot;attr-sensitivityLevel&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                高潮：&lt;span id=&quot;attr-orgasm&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                巅峰：&lt;span id=&quot;attr-peak&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                喷水：&lt;span id=&quot;attr-squirting&quot;&gt;&lt;/span&gt;&lt;br&gt;
+                喷乳：&lt;span id=&quot;attr-milkSpraying&quot;&gt;&lt;/span&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;td&gt;职业属性&lt;/td&gt;
+            &lt;td&gt;
+                职业：&lt;span id=&quot;attr-occupation&quot;&gt;&lt;/span&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;script&gt;
+    // 基本属性
+    document.getElementById(&#39;attr-name&#39;).textContent = player.basicAttributes.name;
+    document.getElementById(&#39;attr-gender&#39;).textContent = player.basicAttributes.gender;
+    document.getElementById(&#39;attr-age&#39;).textContent = player.basicAttributes.age;
+    document.getElementById(&#39;attr-height&#39;).textContent = player.basicAttributes.height;
+    document.getElementById(&#39;attr-bust&#39;).textContent = player.basicAttributes.bust;
+    document.getElementById(&#39;attr-waist&#39;).textContent = player.basicAttributes.waist;
+    document.getElementById(&#39;attr-hip&#39;).textContent = player.basicAttributes.hip;
+    document.getElementById(&#39;attr-cup&#39;).textContent = player.basicAttributes.cup;
+
+    // 身体属性
+    document.getElementById(&#39;attr-culture&#39;).textContent = player.physicalAttributes.culture;
+    document.getElementById(&#39;attr-wisdom&#39;).textContent = player.physicalAttributes.wisdom;
+    document.getElementById(&#39;attr-dexterity&#39;).textContent = player.physicalAttributes.dexterity;
+    document.getElementById(&#39;attr-endurance&#39;).textContent = player.physicalAttributes.endurance;
+    document.getElementById(&#39;attr-strength&#39;).textContent = player.physicalAttributes.strength;
+    document.getElementById(&#39;attr-balance&#39;).textContent = player.physicalAttributes.balance;
+    document.getElementById(&#39;attr-conversation&#39;).textContent = player.physicalAttributes.conversation;
+    document.getElementById(&#39;attr-deportment&#39;).textContent = player.physicalAttributes.deportment;
+    document.getElementById(&#39;attr-rhythm&#39;).textContent = player.physicalAttributes.rhythm;
+    document.getElementById(&#39;attr-creativity&#39;).textContent = player.physicalAttributes.creativity;
+    document.getElementById(&#39;attr-courage&#39;).textContent = player.physicalAttributes.courage;
+    document.getElementById(&#39;attr-beauty&#39;).textContent = player.physicalAttributes.beauty;
+    document.getElementById(&#39;attr-charm&#39;).textContent = player.physicalAttributes.charm;
+    document.getElementById(&#39;attr-openness&#39;).textContent = player.physicalAttributes.openness;
+    document.getElementById(&#39;attr-morality&#39;).textContent = player.physicalAttributes.morality;
+
+    // 技能属性
+    document.getElementById(&#39;attr-painting&#39;).textContent = player.skillAttributes.painting;
+    document.getElementById(&#39;attr-design&#39;).textContent = player.skillAttributes.design;
+    document.getElementById(&#39;attr-dance&#39;).textContent = player.skillAttributes.dance;
+    document.getElementById(&#39;attr-musicTheory&#39;).textContent = player.skillAttributes.musicTheory;
+    document.getElementById(&#39;attr-instrument&#39;).textContent = player.skillAttributes.instrument;
+    document.getElementById(&#39;attr-singing&#39;).textContent = player.skillAttributes.singing;
+    document.getElementById(&#39;attr-hosting&#39;).textContent = player.skillAttributes.hosting;
+    document.getElementById(&#39;attr-acting&#39;).textContent = player.skillAttributes.acting;
+    document.getElementById(&#39;attr-makeup&#39;).textContent = player.skillAttributes.makeup;
+    document.getElementById(&#39;attr-highHeelProficiency&#39;).textContent = player.skillAttributes.highHeelProficiency;
+
+    // 秘密属性
+    document.getElementById(&#39;attr-lust&#39;).textContent = player.secretAttributes.lust;
+    document.getElementById(&#39;attr-corruption&#39;).textContent = player.secretAttributes.corruption;
+    document.getElementById(&#39;attr-corruptionLevel&#39;).textContent = player.secretAttributes.corruptionLevel;
+    document.getElementById(&#39;attr-sensitivity&#39;).textContent = player.secretAttributes.sensitivity;
+    document.getElementById(&#39;attr-sensitivityLevel&#39;).textContent = player.secretAttributes.sensitivityLevel;
+    document.getElementById(&#39;attr-orgasm&#39;).textContent = player.secretAttributes.orgasm;
+    document.getElementById(&#39;attr-peak&#39;).textContent = player.secretAttributes.peak;
+    document.getElementById(&#39;attr-squirting&#39;).textContent = player.secretAttributes.squirting;
+    document.getElementById(&#39;attr-milkSpraying&#39;).textContent = player.secretAttributes.milkSpraying;
+
+    // 职业属性
+    document.getElementById(&#39;attr-occupation&#39;).textContent = player.occupation;
+&lt;/script&gt;</tw-passagedata><tw-passagedata pid="5" name="ShowAttributes" tags="" position="75,300" size="100,100">&lt;h1 id=&quot;playerGreeting&quot;&gt;&lt;/h1&gt;
 &lt;p id=&quot;playerBirthday&quot;&gt;&lt;/p&gt;
 &lt;p id=&quot;playerConstellation&quot;&gt;&lt;/p&gt;
 
 &lt;h2&gt;基本属性&lt;/h2&gt;
+&lt;p&gt;姓名：&lt;span id=&quot;playerName&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;性别：&lt;span id=&quot;playerGender&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;年龄：&lt;span id=&quot;playerAge&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;身高：&lt;span id=&quot;playerHeight&quot;&gt;&lt;/span&gt; cm&lt;/p&gt;
@@ -320,11 +486,12 @@ window.updateCorruptionAndSensitivity = function () {
 &lt;p&gt;高跟鞋熟练：&lt;span id=&quot;playerHighHeelProficiency&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 
 &lt;script&gt;
-    document.getElementById(&#39;playerGreeting&#39;).textContent = `你好，${player.name}！`;
+    document.getElementById(&#39;playerGreeting&#39;).textContent = `你好，${player.basicAttributes.name}！`;
     document.getElementById(&#39;playerBirthday&#39;).textContent = `你的生日是 2003 年 ${player.birthday.month} 月 ${player.birthday.day} 日`;
     document.getElementById(&#39;playerConstellation&#39;).textContent = `星座是 ${player.constellation}`;
 
     // 显示基本属性
+    document.getElementById(&#39;playerName&#39;).textContent = player.basicAttributes.name;
     document.getElementById(&#39;playerGender&#39;).textContent = player.basicAttributes.gender;
     document.getElementById(&#39;playerAge&#39;).textContent = player.basicAttributes.age;
     document.getElementById(&#39;playerHeight&#39;).textContent = player.basicAttributes.height;
@@ -361,37 +528,57 @@ window.updateCorruptionAndSensitivity = function () {
     document.getElementById(&#39;playerActing&#39;).textContent = player.skillAttributes.acting;
     document.getElementById(&#39;playerMakeup&#39;).textContent = player.skillAttributes.makeup;
     document.getElementById(&#39;playerHighHeelProficiency&#39;).textContent = player.skillAttributes.highHeelProficiency;
-&lt;/script&gt;</tw-passagedata><tw-passagedata pid="5" name="AskBirthDay" tags="" position="450,50" size="100,100">&lt;h1 id=&quot;selectedMonthText&quot;&gt;&lt;/h1&gt;
-&lt;div id=&quot;dayButtons&quot;&gt;&lt;/div&gt;
+&lt;/script&gt;</tw-passagedata><tw-passagedata pid="6" name="StoryCaption" tags="" position="75,175" size="100,100">&lt;&lt;script&gt;&gt;
+$(document).ready(function() {
+    $(&#39;#attribute-button&#39;).on(&#39;click&#39;, function() {
+        Engine.play(&quot;AttributePage&quot;);
+    });
+});
+&lt;&lt;/script&gt;&gt;
+
+&lt;button id=&quot;attribute-button&quot;&gt;属性&lt;/button&gt;</tw-passagedata><tw-passagedata pid="7" name="开始" tags="" position="75,50" size="100,100">&lt;h1&gt;欢迎来到星座属性测试游戏！&lt;/h1&gt;
+&lt;button onclick=&quot;changePassage(&#39;AskName&#39;)&quot;&gt;开始游戏&lt;/button&gt;</tw-passagedata><tw-passagedata pid="8" name="AskHeight" tags="" position="575,50" size="100,100">&lt;h1&gt;你是什么身高？&lt;/h1&gt;
+&lt;button onclick=&quot;
+    player.basicAttributes.height = 155;
+    changePassage(&#39;AskCup&#39;);
+&quot;&gt;矮个子&lt;/button&gt;
+&lt;button onclick=&quot;
+    player.basicAttributes.height = 162;
+    changePassage(&#39;AskCup&#39;);
+&quot;&gt;普通&lt;/button&gt;
+&lt;button onclick=&quot;
+    player.basicAttributes.height = 168;
+    changePassage(&#39;AskCup&#39;);
+&quot;&gt;模特身高&lt;/button&gt;</tw-passagedata><tw-passagedata pid="9" name="AskCup" tags="" position="700,50" size="100,100">:: AskCup {&quot;position&quot;:&quot;450,50&quot;,&quot;size&quot;:&quot;100,100&quot;}
+&lt;h1&gt;你是什么罩杯？&lt;/h1&gt;
+&lt;button onclick=&quot;setCupAndAttributes(&#39;A&#39;)&quot;&gt;A&lt;/button&gt;
+&lt;button onclick=&quot;setCupAndAttributes(&#39;B&#39;)&quot;&gt;B&lt;/button&gt;
+&lt;button onclick=&quot;setCupAndAttributes(&#39;C&#39;)&quot;&gt;C&lt;/button&gt;
+&lt;button onclick=&quot;setCupAndAttributes(&#39;D&#39;)&quot;&gt;D&lt;/button&gt;
+&lt;button onclick=&quot;setCupAndAttributes(&#39;E&#39;)&quot;&gt;E&lt;/button&gt;
+&lt;button onclick=&quot;setCupAndAttributes(&#39;F&#39;)&quot;&gt;F&lt;/button&gt;
+&lt;button onclick=&quot;setCupAndAttributes(&#39;G&#39;)&quot;&gt;G&lt;/button&gt;
+&lt;button onclick=&quot;setCupAndAttributes(&#39;H&#39;)&quot;&gt;H&lt;/button&gt;
+&lt;button onclick=&quot;setCupAndAttributes(&#39;I&#39;)&quot;&gt;I&lt;/button&gt;
+&lt;button onclick=&quot;setCupAndAttributes(&#39;J&#39;)&quot;&gt;J&lt;/button&gt;
+&lt;button onclick=&quot;setCupAndAttributes(&#39;K&#39;)&quot;&gt;K&lt;/button&gt;
 &lt;script&gt;
-    const month = player.birthday.month;
-    document.getElementById(&#39;selectedMonthText&#39;).textContent = `你选择了 ${month} 月，请选择生日日期：`;
+    function setCupAndAttributes(cup) {
+        player.basicAttributes.cup = cup;
 
-    let daysInMonth;
-    switch (month) {
-        case 2:
-            daysInMonth = new Date(2003, 2, 0).getDate();
-            break;
-        case 4:
-        case 6:
-        case 9:
-        case 11:
-            daysInMonth = 30;
-            break;
-        default:
-            daysInMonth = 31;
-    }
-
-    const dayButtonsDiv = document.getElementById(&#39;dayButtons&#39;);
-    for (let i = 1; i &lt;= daysInMonth; i++) {
-        const button = document.createElement(&#39;button&#39;);
-        button.textContent = `${i} 日`;
-        button.onclick = function () {
-            player.birthday.day = i;
-            setConstellationAndAttributes(month, i);
-            changePassage(&#39;ShowAttributes&#39;);
+        // 根据罩杯和身高计算胸围
+        const underBust = player.basicAttributes.height * 0.43; // 简单估算下胸围
+        const cupSize = {
+            &#39;A&#39;: 10, &#39;B&#39;: 12.5, &#39;C&#39;: 15, &#39;D&#39;: 17.5, &#39;E&#39;: 20,
+            &#39;F&#39;: 22.5, &#39;G&#39;: 25, &#39;H&#39;: 27.5, &#39;I&#39;: 30, &#39;J&#39;: 32.5, &#39;K&#39;: 35
         };
-        dayButtonsDiv.appendChild(button);
+        player.basicAttributes.bust = underBust + cupSize[cup];
+
+        // 根据身高计算标准腰围和臀围
+        player.basicAttributes.waist = player.basicAttributes.height * 0.37;
+        player.basicAttributes.hip = player.basicAttributes.height * 0.53;
+
+        changePassage(&#39;ShowAttributes&#39;);
     }
 &lt;/script&gt;</tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
